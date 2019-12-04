@@ -59,9 +59,9 @@ bundle$type <- c("")
 row <- c(1:nrow(bundle))
 for(i in row){
   if(bundle$Access[i] == -1 & bundle$Withdrawal[i] == -1 & bundle$Management[i] == 0 & bundle$Exclusion[i] == 0 & bundle$Alienation[i] == 0){
-    bundle$type[i] <- c("Access and withdrawal restricted")
+    bundle$type[i] <- c("Access")
   } else if (bundle$Access[i] == 1 & bundle$Withdrawal[i] == -1 & bundle$Management[i] == 0 & bundle$Exclusion[i] == 0 & bundle$Alienation[i] == 0){
-    bundle$type[i] <- c("Access but with restricted withdrawal")
+    bundle$type[i] <- c("Access+Withdrawal")
   } else if (bundle$Access[i] == 1 & bundle$Withdrawal[i] == 1 & bundle$Management[i] == 0 & bundle$Exclusion[i] == 0 & bundle$Alienation[i] == 0){
     bundle$type[i] <- c("Access+Withdrawal")
   } else if (bundle$Access[i] == 1 & bundle$Withdrawal[i] == 1 & bundle$Management[i] == 1 & bundle$Exclusion[i] == 0 & bundle$Alienation[i] == 0){
@@ -83,14 +83,14 @@ plot2 <- count(df3,value,type,Funder) %>% complete(value,type,Funder)
 plot3 <- count(df3,variable,type) %>% complete(variable,type)
 
 ##Figure 5 Poverty dimension x Bundle of rights
-pdf("FigureX_Poverty_x_Bundle_120419.pdf", height=4.5, width=12)
+pdf("FigureX_Poverty_x_Bundle_120419_v2.pdf", height=4.5, width=12)
 ggplot(plot3, aes(type,variable)) +
   geom_tile(aes(fill=n), color="white") +
   geom_text(aes(label=n)) +
   scale_fill_continuous(na.value="lightgray") +
   scale_fill_gradient(name="Number\nof cases",low="white",high="steelblue") +
-  scale_x_discrete(breaks=c("Access and withdrawal restricted","Access but with restricted withdrawal","Access+Withdrawal","Access+Withdrawal+Management","Access+Withdrawal+Management+Exclusion","Full bundle"), 
-                   labels=c("None","Access + restricted withdrawal","Withdrawal","Management","Exclusion","Alienation")) +
+  scale_x_discrete(breaks=c("Access","Access+Withdrawal","Access+Withdrawal+Management","Access+Withdrawal+Management+Exclusion","Full bundle"), 
+                   labels=c("Access","Withdrawal","Management","Exclusion","Alienation")) +
   scale_y_discrete(breaks=c("Income","Capital/Assets"),
                    limits=c("Capital/Assets","Income"),
                    labels=c("Income/Consumption","Capital/Assets")) +
