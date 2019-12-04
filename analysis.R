@@ -83,7 +83,7 @@ plot2 <- count(df3,value,type,Funder) %>% complete(value,type,Funder)
 plot3 <- count(df3,variable,type) %>% complete(variable,type)
 
 ##Figure 5 Poverty dimension x Bundle of rights
-pdf("FigureX_Poverty_x_Bundle_060319.pdf", height=4.5, width=12)
+pdf("FigureX_Poverty_x_Bundle_120419.pdf", height=4.5, width=12)
 ggplot(plot3, aes(type,variable)) +
   geom_tile(aes(fill=n), color="white") +
   geom_text(aes(label=n)) +
