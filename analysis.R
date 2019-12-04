@@ -9,8 +9,8 @@ library(geojsonio)
 library(maps)
 
 data <- read.csv("SR_FinalDataset_190415_pr_updated2.csv",header=TRUE,stringsAsFactors = FALSE)
-##Figure 7- direction of outcome vs. type of outcome (heatmap)
 
+##Figure 7- direction of outcome vs. type of outcome (heatmap)
 sub <- data %>% select(case_id,OutcomeDirection_income,OutcomeDirection_assets) %>% distinct()
 colnames(sub) <- c("case_id","Income","Capital/Assets")
 sub2 <- melt(sub,id="case_id")
@@ -52,7 +52,6 @@ ggplot(plot, aes(value,variable)) +
 dev.off()
 
 #Figure X - bundle of rights x direction of outcome
-
 ##Assign bundle type
 bundle <- data %>% select(case_id,Access,Withdrawal,Management,Exclusion,Alienation) %>% distinct()
 bundle$type <- c("")
@@ -75,7 +74,7 @@ for(i in row){
     bundle$type[i] <- c("None")
 }
 
-##Create dataframe for plotting
+##Create dataframe for plotting various heatmaps
 bundle_type <- bundle %>% select(case_id,type) %>% distinct()
 df3 <- full_join(df2,bundle_type,by="case_id")
 
@@ -83,17 +82,24 @@ plot1 <- count(df3,variable,value,type) %>% complete(variable,value,type)
 plot2 <- count(df3,value,type,Funder) %>% complete(value,type,Funder)
 plot3 <- count(df3,variable,type) %>% complete(variable,type)
 
+##Figure 5 Poverty dimension x Bundle of rights
 pdf("FigureX_Poverty_x_Bundle_060319.pdf", height=4.5, width=12)
-ggplot(plot3, aes(variable,type)) +
+ggplot(plot3, aes(type,variable)) +
   geom_tile(aes(fill=n), color="white") +
   geom_text(aes(label=n)) +
   scale_fill_continuous(na.value="lightgray") +
   scale_fill_gradient(name="Number\nof cases",low="white",high="steelblue") +
-  ylab("Property rights affected") +
-  xlab("Poverty dimension") +
+  scale_x_discrete(breaks=c("Access and withdrawal restricted","Access but with restricted withdrawal","Access+Withdrawal","Access+Withdrawal+Management","Access+Withdrawal+Management+Exclusion","Full bundle"), 
+                   labels=c("None","Access + restricted withdrawal","Withdrawal","Management","Exclusion","Alienation")) +
+  scale_y_discrete(breaks=c("Income","Capital/Assets"),
+                   limits=c("Capital/Assets","Income"),
+                   labels=c("Income/Consumption","Capital/Assets")) +
+  ylab("Poverty dimension") +
+  xlab("Property rights affected") +
   theme(legend.title=element_text(size=10),
         legend.text=element_text(size=10),
-        axis.title=element_text(size=16))
+        axis.title=element_text(size=16),
+        axis.text.x = element_text(angle=45,hjust=1))
 dev.off()
 
 pdf("FigureX_Poverty_x_Direction_x_Bundle_042619.pdf",height=4.5,width=12)
